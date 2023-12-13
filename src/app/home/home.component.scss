@@ -6,7 +6,22 @@
   justify-content: center;
 }
 
+.container-xlsx {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
 .upload-file-container {
+  padding: 20px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.upload-xlsx-container {
   padding: 20px;
   margin-top: 40px;
   text-align: center;

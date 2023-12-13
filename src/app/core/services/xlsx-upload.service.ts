@@ -7,7 +7,7 @@ import { HttpAPIService } from './http-api.service';
 @Injectable({
   providedIn: 'root'
 })
-export class FileUploadService {
+export class XlsxUploadService {
 
   constructor(private http: HttpClient, private apiService: HttpAPIService) { }
 

@@ -5,12 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { XlsxUploadComponent } from './components/xlsx-upload/xlsx-upload.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
-  declarations: [FileUploadComponent],
+  declarations: [FileUploadComponent, XlsxUploadComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -32,7 +33,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    FileUploadComponent
+    FileUploadComponent,
+    XlsxUploadComponent
   ]
 })
 export class SharedModule { }

@@ -1,10 +1,19 @@
 <div class="file-upload-container">
+  <!-- Centralized button at the top -->
+
+  <!-- File drop area -->
   <div class="file-drop-area">
-    <button mat-raised-button color="secondary">Choose file</button>
-    <div class="file-msg" >{{fileToUpload ? fileToUpload.name : 'or drag and drop file here' }}</div>
-    <input type="file" class="file-input" accept="image/*" (change)="doFilePicked($event.target.files)" >
-  </div>
-  <div class="file-preview">
-    <img [src]="imageSrc" *ngIf="imageSrc" style="height:200px; width:250px">
+
+    <div class="file-msg">
+
+      <span *ngIf="filesToUpload.length > 0; else noFiles">
+        Pdfs Selecionados:
+        <ul>
+          <li *ngFor="let file of filesToUpload">{{ file.name }}</li>
+        </ul>
+      </span>
+      <ng-template #noFiles>Arraste os pdfs aqui</ng-template>
+    </div>
+    <input type="file" class="file-input" accept=".pdf" (change)="doFilePicked($event)" multiple>
   </div>
 </div>

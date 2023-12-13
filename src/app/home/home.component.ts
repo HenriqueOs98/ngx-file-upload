@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { FileUploadService } from './../core/services/file-upload.service';
-import { Presigned } from './../core/interfaces/presigned';
+import { XlsxUploadService } from './../core/services/xlsx-upload.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -11,27 +12,23 @@ import { Presigned } from './../core/interfaces/presigned';
 })
 export class HomeComponent implements OnInit {
 
-  // public presigned$: Observable<Presigned>;
   public response$: Observable<any>;
-  private fileName: string;
-  private fileToUpload: File | null = null;
+  public filesToUpload: File[] = [];
+  public xlsxToUpload: File[] = [];
 
-  constructor(private fileUploadService: FileUploadService) { }
+  constructor(
+    private fileUploadService: FileUploadService, 
+    private xlsxUploadService: XlsxUploadService
+  ) { }
 
   ngOnInit(): void {
   }
 
-  public onUpload(): void{
-
-    this.fileUploadService.getPresignedS3URL(this.fileName).pipe(
-      mergeMap((presignedResponse: Presigned) => {
-        return this.fileUploadService.uploadFile(
-          presignedResponse.presignedUrl,
-          this.fileToUpload,
-          presignedResponse.contentType
-        );
-      }),
-      catchError(this.handleError.bind(this))
+  public onUpload(): void {
+    console.log('Upload button clicked');
+    console.log('PDF Files to upload:', this.filesToUpload);
+    this.fileUploadService.uploadMultipleFiles(this.filesToUpload).pipe(
+      catchError(this.handleError)
     ).subscribe(
       response => this.onNext(response),
       error => this.onError(error),
@@ -39,26 +36,42 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  public onFilePicked(event: any): void {
-    this.fileName = event.file.name;
-    this.fileToUpload = event.file;
+  public onUploadXlsx(): void {
+    console.log('Upload XLSX button clicked');
+    console.log('XLSX Files to upload:', this.xlsxToUpload);
+    this.xlsxUploadService.uploadMultipleFiles(this.xlsxToUpload).pipe(
+      catchError(this.handleError)
+    ).subscribe(
+      response => this.onNext(response),
+      error => this.onError(error),
+      () => this.onComplete()
+    );
+  }
+
+  public onFilePicked(files: File[]): void {
+    this.filesToUpload = files;
+    console.log("PDF Files picked:", this.filesToUpload);
+  }
+
+  public onXlsxPicked(files: File[]): void {
+    this.xlsxToUpload = files;
+    console.log("XLSX Files picked:", this.xlsxToUpload);
   }
 
   private handleError(error: HttpErrorResponse | any): Observable<any> {
-    console.error('Error while making file upload sequential call', error);
+    console.error('Error occurred during file upload', error);
     return EMPTY;
   }
 
   private onNext(response): void {
-    console.log('response ', response);
+    console.log('Response:', response);
   }
 
   private onError(error): void {
-    console.error(error);
+    console.error('Error:', error);
   }
 
   private onComplete(): void {
-    console.log('Processing is Complete');
+    console.log('File upload process is complete');
   }
-
 }

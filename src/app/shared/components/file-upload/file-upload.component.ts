@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output  } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { CoreConstants } from './../../../core/core.constants';
 
 @Component({
@@ -7,37 +7,29 @@ import { CoreConstants } from './../../../core/core.constants';
   styleUrls: ['./file-upload.component.scss']
 })
 export class FileUploadComponent implements OnInit {
-
-  public fileToUpload: File | null = null;
-  public fileSize: string | number;
-  public maxFileSize = 10;
-  public imageSrc: string;
-  @Output() public filePicked = new EventEmitter<any>();
+  
+  public filesToUpload: File[] = [];
+  public maxFileSize = 10; // Max file size in MB
+  @Output() public filesPicked = new EventEmitter<File[]>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  public doFilePicked(event): void {
-    const reader = new FileReader();
-    this.fileToUpload = event && event.item(0);
-    reader.readAsDataURL(this.fileToUpload);
-    reader.onload = () => {
-      this.imageSrc = reader.result as string;
-    };
-
-    this.filePicked.emit({
-      file:  this.fileToUpload
-    });
+  public doFilePicked(event: any): void {
+    const files: FileList = event.target.files;
+    if (files) {
+      this.filesToUpload = Array.from(files);
+      this.filesPicked.emit(this.filesToUpload);
+    }
   }
 
 
-  private calcFilesize(bytes, roundTo = 2): any {
-    const fileSize = bytes / (CoreConstants.FILE_SIZE_UNIT * CoreConstants.FILE_SIZE_UNIT);
-   // this.isFileSizeError = fileSize > this.maxFileSize ? true : false;
-
-    return roundTo ? fileSize.toFixed(roundTo) : fileSize;
+  
+  private calcFilesize(bytes: number, roundTo: number = 2): number {
+    const fileSizeMB = bytes / (1024 * 1024); // Convert bytes to megabytes
+    return Number(fileSizeMB.toFixed(roundTo));
   }
 
 }

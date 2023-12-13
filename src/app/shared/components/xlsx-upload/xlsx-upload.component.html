@@ -1,0 +1,19 @@
+<div class="xlsx-upload-container">
+  <!-- Centralized button at the top -->
+
+  <!-- File drop area -->
+  <div class="xlsx-drop-area">
+
+    <div class="xlsx-msg">
+
+      <span *ngIf="xlsxToUpload.length > 0; else noFiles">
+        Selecionar arquivos:
+        <ul>
+          <li *ngFor="let xlsx of xlsxToUpload">{{ xlsx.name }}</li>
+        </ul>
+      </span>
+      <ng-template #noFiles> Clique aqui para selecionar XLSX/EXCEL</ng-template>
+    </div>
+    <input type="file" class="xlsx-input" accept=".xlsx" (change)="doXlsxPicked($event)" multiple>
+  </div>
+</div>
